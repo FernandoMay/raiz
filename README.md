@@ -1,4 +1,3 @@
-<content>
 <h1 align="center">🌱 Raíz — Project Genesis Engine</h1>
 
 <p align="center">
@@ -111,4 +110,3 @@ Built for the **Next Stop China** International Sci-Tech Innovation Competition 
   <sub>Made with ❤️ for We Empower · AIESEC · Next Stop China</sub><br>
   <sub>© 2026 Raíz. All rights reserved.</sub>
 </p>
-</content>
