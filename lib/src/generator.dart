@@ -95,12 +95,11 @@ class RaizGenerator {
           'dev_dependencies:\n  flutter_lints: ^5.0.0');
     }
 
-    if (config.profile != RaizProfile.basic) {
-      if (!c.contains('provider:')) {
-        c = c.replaceFirst(
-            RegExp(r'dev_dependencies:'),
-            'dependencies:\n  provider: ^6.1.2\n  go_router: ^14.8.0\n\ndev_dependencies:');
-      }
+    if (config.profile != RaizProfile.basic && !c.contains('provider:')) {
+      // Add provider + go_router after the existing cupertino_icons dependency
+      c = c.replaceFirst(
+          RegExp(r'  cupertino_icons: \^1\.0\.\d+'),
+          '${'  cupertino_icons: ^1.0.8'}\n  provider: ^6.1.2\n  go_router: ^14.8.0');
     }
 
     await f.writeAsString(c);
@@ -117,7 +116,6 @@ class RaizGenerator {
     final isBasic = config.profile == RaizProfile.basic;
 
     final imports = StringBuffer();
-    final providers = StringBuffer();
     final homeWidget = StringBuffer();
 
     if (!isBasic) {
@@ -125,14 +123,8 @@ class RaizGenerator {
       imports.writeln("import 'router.dart';");
       imports.writeln("import 'providers/app_provider.dart';");
 
-      providers.writeln('runApp(');
-      providers.writeln('  MultiProvider(');
-      providers.writeln('    providers: [');
-
       if (config.profile == RaizProfile.store) {
-        providers.writeln("import 'providers/cart_provider.dart';");
-        providers.writeln("import 'models/product.dart';");
-        // This import was already added above, adjust
+        imports.writeln("import 'providers/cart_provider.dart';");
       }
 
       homeWidget.writeln('class MyHomePage extends StatelessWidget {');
@@ -704,6 +696,7 @@ class CartItem {
   // ─── Store: product screen ────────────────────────────────────
 
   Future<void> _writeProductScreen() async {
+    const priceExpr = r'\$' r'${product.price.toStringAsFixed(2)}';
     await File('$_dir\\lib\\screens\\product_screen.dart').writeAsString('''
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -740,7 +733,7 @@ class ProductScreen extends StatelessWidget {
                 style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text('\$\${product.price.toStringAsFixed(2)}',
+            Text('$priceExpr',
                 style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.primary)),
             const SizedBox(height: 16),
@@ -771,6 +764,8 @@ class ProductScreen extends StatelessWidget {
   // ─── Store: cart screen ───────────────────────────────────────
 
   Future<void> _writeCartScreen() async {
+    const totalExpr = r'\$' r'${item.total.toStringAsFixed(2)}';
+    const subtotalExpr = r'\$' r'${cart.subtotal.toStringAsFixed(2)}';
     await File('$_dir\\lib\\screens\\cart_screen.dart').writeAsString('''
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -818,7 +813,7 @@ class CartScreen extends StatelessWidget {
                                   color: theme.colorScheme.onPrimaryContainer)),
                         ),
                         title: Text(item.product.name),
-                        subtitle: Text('\$\${item.total.toStringAsFixed(2)}'),
+                        subtitle: Text('$totalExpr'),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete_outline),
                           onPressed: () => cart.removeProduct(item.product.id),
@@ -846,7 +841,7 @@ class CartScreen extends StatelessWidget {
                         children: [
                           Text('Total:',
                               style: theme.textTheme.titleMedium),
-                          Text('\$\${cart.subtotal.toStringAsFixed(2)}',
+                          Text('$subtotalExpr',
                               style: theme.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.primary)),

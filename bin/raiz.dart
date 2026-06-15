@@ -8,33 +8,33 @@ const String version = '1.0.0';
 
 void main(List<String> args) {
   final parser = ArgParser()
-    ..addCommand('create')
-    ..addOption('seed-color',
-        abbr: 'c',
-        defaultsTo: '0xFF1976D2',
-        help: 'ColorScheme.fromSeed hex color (e.g. 0xFF2E7D32)')
-    ..addOption('title',
-        abbr: 't', help: 'Project display title (defaults from name)')
-    ..addOption('description',
-        abbr: 'd', help: 'Project description')
-    ..addOption('profile',
-        abbr: 'p',
-        defaultsTo: 'basic',
-        help: 'Template profile: basic, complete, store')
-    ..addOption('org',
-        abbr: 'o',
-        defaultsTo: 'com.raiz',
-        help: 'Organization identifier')
-    ..addFlag('dark',
-        abbr: 'k', defaultsTo: false, help: 'Include dark theme')
-    ..addOption('remote',
-        abbr: 'r', help: 'Git remote URL to push')
-    ..addOption('path',
-        abbr: 'w', help: 'Parent directory (defaults to current)')
-    ..addFlag('no-git',
-        defaultsTo: false, help: 'Skip git init')
-    ..addFlag('no-install',
-        defaultsTo: false, help: 'Skip flutter pub get')
+    ..addCommand('create', ArgParser()
+      ..addOption('seed-color',
+          abbr: 'c',
+          defaultsTo: '0xFF1976D2',
+          help: 'ColorScheme.fromSeed hex color (e.g. 0xFF2E7D32)')
+      ..addOption('title',
+          abbr: 't', help: 'Project display title (defaults from name)')
+      ..addOption('description',
+          abbr: 'd', help: 'Project description')
+      ..addOption('profile',
+          abbr: 'p',
+          defaultsTo: 'basic',
+          help: 'Template profile: basic, complete, store')
+      ..addOption('org',
+          abbr: 'o',
+          defaultsTo: 'com.raiz',
+          help: 'Organization identifier')
+      ..addFlag('dark',
+          abbr: 'k', defaultsTo: false, help: 'Include dark theme')
+      ..addOption('remote',
+          abbr: 'r', help: 'Git remote URL to push')
+      ..addOption('path',
+          abbr: 'w', help: 'Parent directory (defaults to current)')
+      ..addFlag('no-git',
+          defaultsTo: false, help: 'Skip git init')
+      ..addFlag('no-install',
+          defaultsTo: false, help: 'Skip flutter pub get'))
     ..addFlag('help', abbr: 'h', defaultsTo: false, help: 'Show help');
 
   final results = parser.parse(args);
